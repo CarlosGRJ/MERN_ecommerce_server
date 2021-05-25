@@ -16,6 +16,12 @@ const productSchema = new mongoose.Schema(
          lowercase: true,
          index: true,
       },
+      description: {
+         type: String,
+         required: true,
+         maxlength: 2000,
+         text: true,
+      },
       price: {
          type: Number,
          required: true,
@@ -23,10 +29,10 @@ const productSchema = new mongoose.Schema(
          text: true,
          maxLength: 32,
       },
-      // category: {
-      //    type: ObjectId,
-      //    ref: 'Category',
-      // },
+      category: {
+         type: ObjectId,
+         ref: 'Category',
+      },
       // subs: [
       //    {
       //       type: ObjectId,
