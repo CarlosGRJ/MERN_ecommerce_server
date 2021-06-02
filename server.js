@@ -18,7 +18,7 @@ dbConnection();
 // middlewares
 app.use(morgan('dev'));
 app.use(express.json());
-// app.use(bodyParser.json({ limit: '2mb' }));
+// app.use(bodyParser.json({ limit: '5mb' }));
 app.use(cors());
 
 // routes middleware
