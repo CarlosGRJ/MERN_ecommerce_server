@@ -66,15 +66,38 @@ exports.update = async (req, res) => {
    }
 };
 
+// WITHOUT PAGINATION
+// exports.list = async (req, res) => {
+//    try {
+//       // createdAt/updatedAt, desc/asc
+//       const { sort, order, limit } = req.body;
+//       const products = await Product.find({})
+//          .populate('category')
+//          .populate('subs')
+//          .sort([[sort, order]])
+//          .limit(limit)
+//          .exec();
+
+//       res.json(products);
+//    } catch (error) {
+//       console.log(error);
+//    }
+// };
+
+// WITH PAGINATION
 exports.list = async (req, res) => {
    try {
       // createdAt/updatedAt, desc/asc
-      const { sort, order, limit } = req.body;
+      const { sort, order, page } = req.body;
+      const currentPage = page || 1;
+      const perPage = 3;
+
       const products = await Product.find({})
+         .skip((currentPage - 1) * perPage)
          .populate('category')
          .populate('subs')
          .sort([[sort, order]])
-         .limit(limit)
+         .limit(perPage)
          .exec();
 
       res.json(products);
