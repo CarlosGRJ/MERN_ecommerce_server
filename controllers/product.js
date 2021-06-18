@@ -1,4 +1,5 @@
 const Product = require('../models/product');
+const User = require('../models/user');
 const slugify = require('slugify');
 
 exports.create = async (req, res) => {
@@ -118,7 +119,7 @@ exports.productStart = async (req, res) => {
 
    // who is updating
    // check if currently logged in user have already added rating to this product
-   let existingRatingObject = product.ratings.find(
+   const existingRatingObject = product.ratings.find(
       (ele) => ele.postedBy.toString() === user._id.toString(),
    );
 
@@ -131,8 +132,8 @@ exports.productStart = async (req, res) => {
          },
          { new: true },
       ).exec();
-      console.log('raitingAdded', raitingAdded);
-      res.json(raitingAdded);
+      console.log('ratingAdded', ratingAdded);
+      res.json(ratingAdded);
    } else {
       // If user have already left rating, update it
       const ratingUpdated = await Product.updateOne(
