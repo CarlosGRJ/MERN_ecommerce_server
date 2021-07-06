@@ -229,7 +229,7 @@ const handleStar = (req, res, stars) => {
       .exec((err, aggregates) => {
          if (err) console.log('AGGREGATE ERROR', err);
 
-         console.log('aggregates -> ', aggregates);
+         // console.log('aggregates -> ', aggregates);
          Product.find({ _id: aggregates })
             .populate('category', '_id name')
             .populate('subs', '_id name')
@@ -241,8 +241,17 @@ const handleStar = (req, res, stars) => {
       });
 };
 
+const handleSub = async (req, res, sub) => {
+   const products = await Product.find({ subs: sub })
+      .populate('category', '_id name')
+      .populate('subs', '_id name')
+      .populate('ratings.postedBy', '_id name')
+      .exec();
+   res.json(products);
+};
+
 exports.searchFilters = async (req, res) => {
-   const { query, price, category, stars } = req.body;
+   const { query, price, category, stars, sub } = req.body;
 
    if (query) {
       console.log('query --->', query);
@@ -263,5 +272,10 @@ exports.searchFilters = async (req, res) => {
    if (stars) {
       console.log('stars ---> ', stars);
       await handleStar(req, res, stars);
+   }
+
+   if (sub) {
+      console.log('sub --->', sub);
+      await handleSub(req, res, sub);
    }
 };
