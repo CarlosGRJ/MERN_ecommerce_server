@@ -3,7 +3,7 @@ const Product = require('../models/product');
 const Cart = require('../models/cart');
 
 exports.userCart = async (req, res) => {
-   console.log('BODY ===> ', req.body);
+   //    console.log('BODY ===> ', req.body);
    const { cart } = req.body;
 
    let products = [];
@@ -12,6 +12,7 @@ exports.userCart = async (req, res) => {
 
    // Check if cart with logged in user id already exist
    let cartExistByThisUser = await Cart.findOne({ orderedBy: user._id }).exec();
+   //    console.log('cartExistByThisUser ---> ', cartExistByThisUser);
 
    if (cartExistByThisUser) {
       cartExistByThisUser.remove();
@@ -31,12 +32,12 @@ exports.userCart = async (req, res) => {
 
       products.push(object);
    }
-   console.log('products ', products);
+   //    console.log('products ---> ', products);
    let cartTotal = 0;
-   for (let i = 0; i > products.length; i++) {
+   for (let i = 0; i < products.length; i++) {
       cartTotal = cartTotal + products[i].price * products[i].count;
    }
-   console.log('cartTotal ', cartTotal);
+   //    console.log('cartTotal ', cartTotal);
 
    const newCart = await new Cart({
       products,
@@ -44,6 +45,16 @@ exports.userCart = async (req, res) => {
       orderedBy: user._id,
    }).save();
 
-   console.log('newCart ', newCart);
+   //    console.log('newCart ', newCart);
    res.json({ ok: true });
+};
+
+exports.getUserCart = async (req, res) => {
+   const user = await User.findOne({ email: req.user.email }).exec();
+
+   let cart = await Cart.findOne({ orderedBy: user._id })
+      .populate('products.product', '_id title price totalAfterDiscount')
+      .exec();
+   const { products, cartTotal, totalAfterDiscount } = cart;
+   res.json({ products, cartTotal, totalAfterDiscount });
 };
