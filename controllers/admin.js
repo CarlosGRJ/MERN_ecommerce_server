@@ -1,0 +1,24 @@
+const User = require('../models/user');
+const Order = require('../models/order');
+
+exports.orders = async (req, res) => {
+   const allOrders = await Order.find({})
+      .sort('-createdAt')
+      .populate('products.product')
+      .exec();
+
+   console.log('allOrders ', allOrders.length);
+   res.json(allOrders);
+};
+
+exports.orderStatus = async (req, res) => {
+   const { orderId, orderStatus } = req.body;
+
+   const updated = await Order.findByIdAndUpdate(
+      orderId,
+      { orderStatus },
+      { new: true },
+   ).exec();
+
+   res.json(updated);
+};
