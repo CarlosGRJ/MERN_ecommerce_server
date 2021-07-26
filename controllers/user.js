@@ -3,7 +3,9 @@ const Product = require('../models/product');
 const Cart = require('../models/cart');
 const Coupon = require('../models/coupon');
 const Order = require('../models/order');
-const uniqueid = require('uniqueid');
+// const uniqueid = require('uniqueid');
+const mongoose = require('mongoose');
+const { ObjectId } = mongoose.Types;
 
 exports.userCart = async (req, res) => {
    //    console.log('BODY ===> ', req.body);
@@ -195,7 +197,7 @@ exports.createCashOrder = async (req, res) => {
    const newOrder = await new Order({
       products: userCart.products,
       paymentIntent: {
-         id: uniqueid(),
+         id: new ObjectId(),
          amount: userCart.cartTotal,
          currency: 'usd',
          status: 'Cash On Delivery',
